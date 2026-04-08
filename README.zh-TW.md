@@ -48,7 +48,7 @@ Claude Code（總控 / 編排者）
 
 | 需求 | 是否必要 | 說明 |
 |------|----------|------|
-| **Node.js 20 以上** | 必要 | `ora@9.x` 需要 Node.js 20+，若使用 Node 18 可能出現 `SyntaxError` |
+| **Node.js 20 以上** | 必要 | `ora@9.x` 需要 Node.js 20 以上版本，Node 18 無法正常使用 |
 | **Claude Code CLI** | 必要 | 這是 CCG 主要運作環境 |
 | **jq** | 必要 | 用於自動授權 Hook |
 | **Codex CLI** | 選用 | 安裝後可啟用後端自動分流 |
@@ -221,7 +221,7 @@ npx ccg-workflow
 | `/ccg:workflow` | 完整 6 階段開發流程 | Codex + Gemini |
 | `/ccg:plan` | 多模型協作規劃（Phase 1-2） | Codex + Gemini |
 | `/ccg:execute` | 多模型協作執行（Phase 3-5） | Codex + Gemini + Claude |
-| `/ccg:codex-exec` | 由 Codex 主導執行（規劃 → 寫碼 → 審查） | Codex + 多模型審查 |
+| `/ccg:codex-exec` | 由 Codex 主導執行（規劃 → 撰寫程式碼 → 審查） | Codex + 多模型審查 |
 | `/ccg:feat` | 智慧型功能開發 | 自動分流 |
 | `/ccg:frontend` | 前端任務快速模式 | Gemini |
 | `/ccg:backend` | 後端任務快速模式 | Codex |
@@ -362,7 +362,7 @@ npx ccg-workflow
 | 變數 | 說明 | 預設值 | 什麼時候需要調整 |
 |------|------|--------|------------------|
 | `CODEAGENT_POST_MESSAGE_DELAY` | Codex 完成後等待秒數 | `5` | 如果 Codex 程序卡住，可改成 `1` |
-| `CODEX_TIMEOUT` | wrapper 執行逾時秒數 | `7200` | 任務非常大、執行時間很長時 |
+| `CODEX_TIMEOUT` | wrapper 執行逾時秒數 | `7200` | 當任務非常大且執行時間很長時 |
 | `BASH_DEFAULT_TIMEOUT_MS` | Claude Code Bash 預設逾時（毫秒） | `120000` | 指令常常超時時 |
 | `BASH_MAX_TIMEOUT_MS` | Claude Code Bash 最大逾時（毫秒） | `600000` | 建置或測試時間很長時 |
 
@@ -485,8 +485,7 @@ npm uninstall -g ccg-workflow
 
 ### 沒裝 Codex CLI 或 Gemini CLI，可以先用嗎？
 
-可以。  
-CCG 的重點不只是模型分流，也包含流程紀律、指令封裝與 Claude 的最終審查。你可以先熟悉整個工作方式，再逐步把 Codex CLI 與 Gemini CLI 補上。
+可以。CCG 的重點不只是模型分流，也包含流程紀律、指令封裝與 Claude 的最終審查。你可以先熟悉整個工作方式，再逐步把 Codex CLI 與 Gemini CLI 補上。
 
 ### 可以跟原本自己的工作流共存嗎？
 
