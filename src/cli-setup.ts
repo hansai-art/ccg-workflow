@@ -9,13 +9,47 @@ import { showMainMenu } from './commands/menu'
 import { i18n, initI18n } from './i18n'
 import { readCcgConfig } from './utils/config'
 
-function customizeHelp(sections: any[]): any[] {
-  sections.unshift({
+type HelpSection = {
+  title?: string
+  body: string
+}
+
+function localizeDefaultHelpSections(sections: HelpSection[]): HelpSection[] {
+  return sections.map((section) => {
+    let title = section.title
+    let body = section.body
+
+    if (title === 'Usage')
+      title = i18n.t('cli:help.usage')
+    else if (title === 'Commands')
+      title = i18n.t('cli:help.commands')
+    else if (title === 'Options')
+      title = i18n.t('cli:help.options')
+    else if (title === 'Examples')
+      title = i18n.t('cli:help.examples')
+    else if (title === 'For more info, run any command with the `--help` flag')
+      title = i18n.t('cli:help.moreInfo')
+
+    if (section.title === 'Options') {
+      body = body
+        .replaceAll('Display this message', i18n.t('cli:help.optionDescriptions.displayHelp'))
+        .replaceAll('Display version number', i18n.t('cli:help.optionDescriptions.displayVersion'))
+        .replace(/\(default: ([^)]+)\)/g, (_, value: string) => `(${i18n.t('cli:help.defaultValue', { value })})`)
+    }
+
+    return { ...section, title, body }
+  })
+}
+
+export function customizeHelp(sections: HelpSection[]): HelpSection[] {
+  const localizedSections = localizeDefaultHelpSections(sections)
+
+  localizedSections.unshift({
     title: '',
     body: ansis.cyan.bold(`CCG - Claude + Codex + Gemini v${version}`),
   })
 
-  sections.push({
+  localizedSections.push({
     title: ansis.yellow(i18n.t('cli:help.commands')),
     body: [
       `  ${ansis.cyan('ccg')}              ${i18n.t('cli:help.commandDescriptions.showMenu')}`,
@@ -29,7 +63,7 @@ function customizeHelp(sections: any[]): any[] {
     ].join('\n'),
   })
 
-  sections.push({
+  localizedSections.push({
     title: ansis.yellow(i18n.t('cli:help.options')),
     body: [
       `  ${ansis.green('--lang, -l')} <lang>         ${i18n.t('cli:help.optionDescriptions.displayLanguage')} (zh-TW, zh-CN, en)`,
@@ -47,7 +81,7 @@ function customizeHelp(sections: any[]): any[] {
     ].join('\n'),
   })
 
-  sections.push({
+  localizedSections.push({
     title: ansis.yellow(i18n.t('cli:help.examples')),
     body: [
       ansis.gray(`  # ${i18n.t('cli:help.exampleDescriptions.showInteractiveMenu')}`),
@@ -66,7 +100,7 @@ function customizeHelp(sections: any[]): any[] {
     ].join('\n'),
   })
 
-  return sections
+  return localizedSections
 }
 
 export async function setupCommands(cli: CAC): Promise<void> {
@@ -97,7 +131,7 @@ export async function setupCommands(cli: CAC): Promise<void> {
     .option('--lang, -l <lang>', `${i18n.t('cli:help.optionDescriptions.displayLanguage')} (zh-TW, zh-CN, en)`)
     .option('--force, -f', i18n.t('cli:help.optionDescriptions.forceOverwrite'))
     .option('--skip-prompt, -s', i18n.t('cli:help.optionDescriptions.skipAllPrompts'))
-    .option('--skip-mcp', 'Skip MCP configuration (used during update)')
+    .option('--skip-mcp', i18n.t('cli:help.optionDescriptions.skipMcpConfig'))
     .option('--frontend, -F <models>', i18n.t('cli:help.optionDescriptions.frontendModels'))
     .option('--backend, -B <models>', i18n.t('cli:help.optionDescriptions.backendModels'))
     .option('--mode, -m <mode>', i18n.t('cli:help.optionDescriptions.collaborationMode'))

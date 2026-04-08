@@ -61,7 +61,7 @@ External models have no write access — they only return patches, which Claude 
 npx ccg-workflow
 ```
 
-On first run, CCG prompts you to select a language (English / Chinese). This preference is saved for all future sessions.
+On first run, CCG prompts you to select a language (Traditional Chinese / Simplified Chinese / English). This preference is saved for all future sessions.
 
 ### Install jq
 

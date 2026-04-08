@@ -31,6 +31,7 @@ const zhCN = {
   },
   cli: {
     help: {
+      usage: '用法',
       commands: '命令',
       commandDescriptions: {
         showMenu: '顯示互動式選單（預設）',
@@ -39,6 +40,7 @@ const zhCN = {
         diagnoseMcp: '診斷 MCP 配置問題',
         fixMcp: '修復 Windows MCP 配置',
       },
+      moreInfo: '更多信息',
       shortcuts: '快捷方式:',
       shortcutDescriptions: {
         quickInit: '快速初始化',
@@ -50,12 +52,14 @@ const zhCN = {
         displayHelp: '顯示幫助資訊',
         displayVersion: '顯示版本號',
         skipAllPrompts: '跳過所有互動式提示（非互動模式）',
+        skipMcpConfig: '跳過 MCP 配置（更新流程使用）',
         frontendModels: '前端模型（逗號分隔）',
         backendModels: '後端模型（逗號分隔）',
         collaborationMode: '協作模式 (parallel/smart/sequential)',
         workflows: '要安裝的工作流',
         installDir: '安裝目錄',
       },
+      defaultValue: '默认: {{value}}',
       nonInteractiveMode: '非互動模式:',
       examples: '示例',
       exampleDescriptions: {
@@ -509,6 +513,7 @@ const zhTW = {
   },
   cli: {
     help: {
+      usage: '用法',
       commands: '命令',
       commandDescriptions: {
         showMenu: '顯示互動式選單（預設）',
@@ -517,6 +522,7 @@ const zhTW = {
         diagnoseMcp: '診斷 MCP 配置問題',
         fixMcp: '修復 Windows MCP 配置',
       },
+      moreInfo: '更多資訊',
       shortcuts: '快捷方式:',
       shortcutDescriptions: {
         quickInit: '快速初始化',
@@ -528,12 +534,14 @@ const zhTW = {
         displayHelp: '顯示幫助資訊',
         displayVersion: '顯示版本號',
         skipAllPrompts: '跳過所有互動式提示（非互動模式）',
+        skipMcpConfig: '跳過 MCP 配置（更新流程使用）',
         frontendModels: '前端模型（逗號分隔）',
         backendModels: '後端模型（逗號分隔）',
         collaborationMode: '協作模式 (parallel/smart/sequential)',
         workflows: '要安裝的工作流',
         installDir: '安裝目錄',
       },
+      defaultValue: '預設: {{value}}',
       nonInteractiveMode: '非互動模式:',
       examples: '示例',
       exampleDescriptions: {
@@ -987,6 +995,7 @@ const en: typeof zhTW = {
   },
   cli: {
     help: {
+      usage: 'Usage',
       commands: 'Commands',
       commandDescriptions: {
         showMenu: 'Show interactive menu (default)',
@@ -995,6 +1004,7 @@ const en: typeof zhTW = {
         diagnoseMcp: 'Diagnose MCP configuration issues',
         fixMcp: 'Fix Windows MCP configuration',
       },
+      moreInfo: 'For more info, run any command with the `--help` flag',
       shortcuts: 'Shortcuts:',
       shortcutDescriptions: {
         quickInit: 'Quick init',
@@ -1006,12 +1016,14 @@ const en: typeof zhTW = {
         displayHelp: 'Display help',
         displayVersion: 'Display version',
         skipAllPrompts: 'Skip all interactive prompts (non-interactive mode)',
+        skipMcpConfig: 'Skip MCP configuration (used during update)',
         frontendModels: 'Frontend models (comma-separated)',
         backendModels: 'Backend models (comma-separated)',
         collaborationMode: 'Collaboration mode (parallel/smart/sequential)',
         workflows: 'Workflows to install',
         installDir: 'Installation directory',
       },
+      defaultValue: 'default: {{value}}',
       nonInteractiveMode: 'Non-interactive mode:',
       examples: 'Examples',
       exampleDescriptions: {
