@@ -102,7 +102,7 @@ node -v
 ```
 
 你應該看到 `v20.x`、`v22.x` 或更新版本。  
-如果版本低於 20，請先安裝新版 Node.js，再繼續後面的步驟。
+如果版本低於 20，請先到 [Node.js 官方網站](https://nodejs.org/) 安裝 Node.js 20 以上版本，再繼續後面的步驟。
 
 ### 步驟 2：安裝 jq
 
@@ -196,7 +196,7 @@ npx ccg-workflow
 
 先檢查：
 
-- Node.js 是否為 20 以上
+- Node.js 是否為 20 或更新版本
 - `jq` 是否已安裝
 - Claude Code 是否已安裝且可正常登入
 
@@ -443,7 +443,7 @@ CCG 安裝時會自動寫入 Hook，讓 `codeagent-wrapper` 可以被自動授�
 npx ccg-workflow menu
 ```
 
-在選單中選擇 **「Tools」**。
+在選單中選擇 **「工具」**。
 
 - **ccusage**：分析 Claude Code 使用量
 - **CCometixLine**：狀態列工具，可顯示 Git 與使用量資訊
