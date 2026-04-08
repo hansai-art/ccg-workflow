@@ -9,8 +9,9 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
 [![Tests](https://img.shields.io/badge/Tests-139%20passed-brightgreen.svg)]()
 [![Follow on X](https://img.shields.io/badge/X-@CCG__Workflow-black?logo=x&logoColor=white)](https://x.com/CCG_Workflow)
+![star](https://atomgit.com/fengshao1227/ccg-workflow/star/badge.svg)
 
-[繁體中文](./README.md) | **简体中文** | [English](./README.en.md)
+[繁体中文](./README.md) | **简体中文** | [English](./README.en.md)
 
 </div>
 
