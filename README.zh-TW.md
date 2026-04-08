@@ -75,9 +75,7 @@ sudo apt install jq
 sudo yum install jq
 
 # Windows
-choco install jq
-# 或
-scoop install jq
+choco install jq   # 或改用：scoop install jq
 ```
 
 ### 安裝 Claude Code
@@ -101,7 +99,7 @@ npx ccg-workflow menu
 node -v
 ```
 
-你應該看到 `v20.x`、`v22.x` 或更新版本。  
+你應該看到 `v20.x` 或更新版本。  
 如果版本低於 20，請先到 [Node.js 官方網站](https://nodejs.org/) 安裝 Node.js 20 以上版本，再繼續後面的步驟。
 
 ### 步驟 2：安裝 jq
@@ -181,7 +179,7 @@ npx ccg-workflow
 
 ### 步驟 8：什麼時候該用哪個指令？
 
-| 你的情境 | 建議指令 | 原因 |
+| 使用情境 | 建議指令 | 原因 |
 |----------|----------|------|
 | 我只想先整理需求 | `/ccg:plan` | 風險低，適合先確認方向 |
 | 我要直接做完整功能 | `/ccg:workflow` | 一次走完整開發流程 |
@@ -369,7 +367,7 @@ npx ccg-workflow
 | `BASH_MAX_TIMEOUT_MS` | Claude Code Bash 最大逾時（毫秒） | `600000` | 建置或測試時間很長時 |
 
 <details>
-<summary><code>settings.json</code> 範例</summary>
+<summary>settings.json 範例</summary>
 
 ```json
 {
@@ -483,7 +481,7 @@ npm uninstall -g ccg-workflow
 | 需要同時改前後端的完整功能 | 用 `/ccg:workflow` 或 `/ccg:team-*` |
 | 對架構要求很高、不希望 AI 自由猜測 | 用 `/ccg:spec-*` |
 
-一個簡單判斷方式：**如果你覺得這次改動會動到 3 個以上檔案，就很值得試 CCG。**
+一個簡單判斷方式：**如果你覺得這次改動會影響 3 個以上檔案，就很值得試 CCG。**
 
 ### 沒裝 Codex CLI 或 Gemini CLI，可以先用嗎？
 
@@ -572,7 +570,7 @@ CCG 不只有核心開發流程，也有 20+ 個偏 UI / UX 精修的指令，�
 
 ## 聯絡方式
 
-- **X（Twitter）**：[ @CCG_Workflow](https://x.com/CCG_Workflow) — 最新消息、示範與使用技巧
+- **X（Twitter）**：[@CCG_Workflow](https://x.com/CCG_Workflow) — 最新消息、示範與使用技巧
 - **Email**：[fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — 贊助、合作或開發交流
 - **Issues**：[GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — 回報 Bug 與提出功能建議
 - **Discussions**：[GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — 問題討論與社群交流
