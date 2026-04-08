@@ -75,7 +75,7 @@ sudo apt install jq
 sudo yum install jq
 
 # Windows
-choco install jq   # 或改用：scoop install jq
+choco install jq   # 或改用: scoop install jq
 ```
 
 ### 安裝 Claude Code
