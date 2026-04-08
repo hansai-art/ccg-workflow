@@ -1,4 +1,4 @@
-# CCG - Claude + Codex + Gemini Multi-Model Collaboration
+# CCG - Claude + Codex + Gemini 多模型协作
 
 <div align="center">
 
@@ -9,61 +9,60 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
 [![Tests](https://img.shields.io/badge/Tests-139%20passed-brightgreen.svg)]()
 [![Follow on X](https://img.shields.io/badge/X-@CCG__Workflow-black?logo=x&logoColor=white)](https://x.com/CCG_Workflow)
-![star](https://atomgit.com/fengshao1227/ccg-workflow/star/badge.svg)
 
-[正體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md) | English
+[正體中文](./README.zh-TW.md) | 简体中文 | [English](./README.en.md)
 
 </div>
 
-A multi-model collaboration development system where Claude Code orchestrates Codex + Gemini. Frontend tasks route to Gemini, backend tasks route to Codex, and Claude handles orchestration and code review.
+Claude Code 编排 Codex + Gemini 的多模型协作开发系统。前端任务路由至 Gemini，后端任务路由至 Codex，Claude 负责编排决策和代码审核。
 
-## Why CCG?
+## 为什么选择 CCG？
 
-- **Zero-config model routing** — Frontend tasks automatically go to Gemini, backend tasks to Codex. No manual switching.
-- **Security by design** — External models have no write access. They return patches; Claude reviews before applying.
-- **29+ slash commands** — From planning to execution, git workflow to code review, all accessible via `/ccg:*`.
-- **Spec-driven development** — Integrates [OPSX](https://github.com/fission-ai/opsx) to turn vague requirements into verifiable constraints, eliminating AI improvisation.
+- **零配置模型路由** — 前端任务自动走 Gemini，后端任务自动走 Codex，无需手动切换。
+- **安全设计** — 外部模型无写入权限，仅返回 Patch，由 Claude 审核后应用。
+- **29+ 个斜杠命令** — 从规划到执行、Git 工作流到代码审查，通过 `/ccg:*` 一站式访问。
+- **规范驱动开发** — 集成 [OPSX](https://github.com/fission-ai/opsx)，将模糊需求变成可验证约束，让 AI 没法自由发挥。
 
-## Architecture
+## 架构
 
 ```
-Claude Code (Orchestrator)
+Claude Code (编排)
        │
    ┌───┴───┐
    ↓       ↓
 Codex   Gemini
-(Backend) (Frontend)
+(后端)   (前端)
    │       │
    └───┬───┘
        ↓
   Unified Patch
 ```
 
-External models have no write access — they only return patches, which Claude reviews before applying.
+外部模型无写入权限，仅返回 Patch，由 Claude 审核后应用。
 
-> **🎬 [See CCG in action →](https://x.com/CCG_Workflow/status/2038923720610463876)** — Real multi-model collaboration demo on X
+> **🎬 [查看 CCG 实战演示 →](https://x.com/CCG_Workflow/status/2038923720610463876)** — X 上的多模型协作真实案例
 
-## Quick Start
+## 快速开始
 
-### Prerequisites
+### 前置条件
 
-| Dependency | Required | Notes |
-|------------|----------|-------|
-| **Node.js 20+** | Yes | `ora@9.x` requires Node >= 20. Node 18 causes `SyntaxError` |
-| **Claude Code CLI** | Yes | [Install guide](#install-claude-code) |
-| **jq** | Yes | Used for auto-authorization hook ([install](#install-jq)) |
-| **Codex CLI** | No | Enables backend routing |
-| **Gemini CLI** | No | Enables frontend routing |
+| 依赖 | 必需 | 说明 |
+|------|------|------|
+| **Node.js 20+** | 是 | `ora@9.x` 要求 Node >= 20，Node 18 会报 `SyntaxError` |
+| **Claude Code CLI** | 是 | [安装方法](#安装-claude-code) |
+| **jq** | 是 | 用于自动授权 Hook（[安装方法](#安装-jq)） |
+| **Codex CLI** | 否 | 启用后端路由 |
+| **Gemini CLI** | 否 | 启用前端路由 |
 
-### Installation
+### 安装
 
 ```bash
 npx ccg-workflow
 ```
 
-On first run, CCG prompts you to select a language (English / Chinese). This preference is saved for all future sessions.
+首次运行会提示选择语言（简体中文 / English），选择后自动保存，后续无需再选。
 
-### Install jq
+### 安装 jq
 
 ```bash
 # macOS
@@ -76,157 +75,157 @@ sudo apt install jq
 sudo yum install jq
 
 # Windows
-choco install jq   # or: scoop install jq
+choco install jq   # 或: scoop install jq
 ```
 
-### Install Claude Code
+### 安装 Claude Code
 
 ```bash
-npx ccg-workflow menu  # Select "Install Claude Code"
+npx ccg-workflow menu  # 选择「安装 Claude Code」
 ```
 
-Supports: npm, homebrew, curl, powershell, cmd.
+支持：npm、homebrew、curl、powershell、cmd。
 
-## Commands
+## 命令
 
-### Development Workflow
+### 开发工作流
 
-| Command | Description | Model |
-|---------|-------------|-------|
-| `/ccg:workflow` | Full 6-phase development workflow | Codex + Gemini |
-| `/ccg:plan` | Multi-model collaborative planning (Phase 1-2) | Codex + Gemini |
-| `/ccg:execute` | Multi-model collaborative execution (Phase 3-5) | Codex + Gemini + Claude |
-| `/ccg:codex-exec` | Codex full execution (plan → code → review) | Codex + multi-model review |
-| `/ccg:feat` | Smart feature development | Auto-routed |
-| `/ccg:frontend` | Frontend tasks (fast mode) | Gemini |
-| `/ccg:backend` | Backend tasks (fast mode) | Codex |
+| 命令 | 说明 | 模型 |
+|------|------|------|
+| `/ccg:workflow` | 6 阶段完整工作流 | Codex + Gemini |
+| `/ccg:plan` | 多模型协作规划 (Phase 1-2) | Codex + Gemini |
+| `/ccg:execute` | 多模型协作执行 (Phase 3-5) | Codex + Gemini + Claude |
+| `/ccg:codex-exec` | Codex 全权执行（计划 → 代码 → 审核） | Codex + 多模型审核 |
+| `/ccg:feat` | 智能功能开发 | 自动路由 |
+| `/ccg:frontend` | 前端任务（快速模式） | Gemini |
+| `/ccg:backend` | 后端任务（快速模式） | Codex |
 
-### Analysis & Quality
+### 分析与质量
 
-| Command | Description | Model |
-|---------|-------------|-------|
-| `/ccg:analyze` | Technical analysis | Codex + Gemini |
-| `/ccg:debug` | Problem diagnosis + fix | Codex + Gemini |
-| `/ccg:optimize` | Performance optimization | Codex + Gemini |
-| `/ccg:test` | Test generation | Auto-routed |
-| `/ccg:review` | Code review (auto git diff) | Codex + Gemini |
-| `/ccg:enhance` | Prompt enhancement | Built-in |
+| 命令 | 说明 | 模型 |
+|------|------|------|
+| `/ccg:analyze` | 技术分析 | Codex + Gemini |
+| `/ccg:debug` | 问题诊断 + 修复 | Codex + Gemini |
+| `/ccg:optimize` | 性能优化 | Codex + Gemini |
+| `/ccg:test` | 测试生成 | 自动路由 |
+| `/ccg:review` | 代码审查（自动 git diff） | Codex + Gemini |
+| `/ccg:enhance` | Prompt 增强 | 内置 |
 
-### OPSX Spec-Driven
+### OPSX 规范驱动
 
-| Command | Description |
-|---------|-------------|
-| `/ccg:spec-init` | Initialize OPSX environment |
-| `/ccg:spec-research` | Requirements → Constraints |
-| `/ccg:spec-plan` | Constraints → Zero-decision plan |
-| `/ccg:spec-impl` | Execute plan + archive |
-| `/ccg:spec-review` | Dual-model cross-review |
+| 命令 | 说明 |
+|------|------|
+| `/ccg:spec-init` | 初始化 OPSX 环境 |
+| `/ccg:spec-research` | 需求 → 约束集 |
+| `/ccg:spec-plan` | 约束 → 零决策计划 |
+| `/ccg:spec-impl` | 按计划执行 + 归档 |
+| `/ccg:spec-review` | 双模型交叉审查 |
 
-### Agent Teams (v1.7.60+)
+### Agent Teams（v1.7.60+）
 
-| Command | Description |
-|---------|-------------|
-| `/ccg:team-research` | Requirements → constraints (parallel exploration) |
-| `/ccg:team-plan` | Constraints → parallel implementation plan |
-| `/ccg:team-exec` | Spawn Builder teammates for parallel coding |
-| `/ccg:team-review` | Dual-model cross-review |
+| 命令 | 说明 |
+|------|------|
+| `/ccg:team-research` | 需求 → 约束集（并行探索） |
+| `/ccg:team-plan` | 约束 → 并行实施计划 |
+| `/ccg:team-exec` | spawn Builder teammates 并行写代码 |
+| `/ccg:team-review` | 双模型交叉审查 |
 
-> **Prerequisite**: Enable Agent Teams in `settings.json`: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
+> **前置条件**：需在 `settings.json` 中启用：`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
 
-### Git Tools
+### Git 工具
 
-| Command | Description |
-|---------|-------------|
-| `/ccg:commit` | Smart commit (conventional commit format) |
-| `/ccg:rollback` | Interactive rollback |
-| `/ccg:clean-branches` | Clean merged branches |
-| `/ccg:worktree` | Worktree management |
+| 命令 | 说明 |
+|------|------|
+| `/ccg:commit` | 智能提交（conventional commit 格式） |
+| `/ccg:rollback` | 交互式回滚 |
+| `/ccg:clean-branches` | 清理已合并分支 |
+| `/ccg:worktree` | Worktree 管理 |
 
-### Project Setup
+### 项目管理
 
-| Command | Description |
-|---------|-------------|
-| `/ccg:init` | Initialize project CLAUDE.md |
-| `/ccg:context` | Project context management (.context/ init, log, compress, history) |
+| 命令 | 说明 |
+|------|------|
+| `/ccg:init` | 初始化项目 CLAUDE.md |
+| `/ccg:context` | 项目上下文管理（.context 初始化/日志/压缩/历史） |
 
-## Workflow Guides
+## 工作流指南
 
-### Planning & Execution Separation
+### 规划与执行分离
 
 ```bash
-# 1. Generate implementation plan
-/ccg:plan implement user authentication
+# 1. 生成实施计划
+/ccg:plan 实现用户认证功能
 
-# 2. Review the plan (editable)
-# Plan saved to .claude/plan/user-auth.md
+# 2. 审查计划（可修改）
+# 计划保存至 .claude/plan/user-auth.md
 
-# 3a. Execute (Claude refactors) — fine-grained control
+# 3a. 执行计划（Claude 重构）— 精细控制
 /ccg:execute .claude/plan/user-auth.md
 
-# 3b. Execute (Codex does everything) — efficient, low Claude token usage
+# 3b. 执行计划（Codex 全权）— 高效执行，Claude token 极低
 /ccg:codex-exec .claude/plan/user-auth.md
 ```
 
-### OPSX Spec-Driven Workflow
+### OPSX 规范驱动工作流
 
-Integrates [OPSX architecture](https://github.com/fission-ai/opsx) to turn requirements into constraints, eliminating AI improvisation:
-
-```bash
-/ccg:spec-init                          # Initialize OPSX environment
-/ccg:spec-research implement user auth  # Research → constraints
-/ccg:spec-plan                          # Parallel analysis → zero-decision plan
-/ccg:spec-impl                          # Execute the plan
-/ccg:spec-review                        # Independent review (anytime)
-```
-
-> **Tip**: `/ccg:spec-*` commands internally call `/opsx:*`. You can `/clear` between phases — state is persisted in the `openspec/` directory.
-
-### Agent Teams Parallel Workflow
-
-Leverage Claude Code Agent Teams to spawn multiple Builder teammates for parallel coding:
+集成 [OPSX 架构](https://github.com/fission-ai/opsx)，把需求变成约束，让 AI 没法自由发挥：
 
 ```bash
-/ccg:team-research implement kanban API  # 1. Requirements → constraints
-# /clear
-/ccg:team-plan kanban-api               # 2. Plan → parallel tasks
-# /clear
-/ccg:team-exec                          # 3. Builders code in parallel
-# /clear
-/ccg:team-review                        # 4. Dual-model cross-review
+/ccg:spec-init                       # 初始化 OPSX 环境
+/ccg:spec-research 实现用户认证        # 研究需求 → 输出约束集
+/ccg:spec-plan                       # 并行分析 → 零决策计划
+/ccg:spec-impl                       # 按计划执行
+/ccg:spec-review                     # 独立审查（随时可用）
 ```
 
-> **vs Traditional Workflow**: Team series uses `/clear` between steps to isolate context, passing state through files. Ideal for tasks decomposable into 3+ independent modules.
+> **提示**：`/ccg:spec-*` 命令内部调用 `/opsx:*`。每阶段之间可 `/clear`，状态存在 `openspec/` 目录，不怕上下文爆。
 
-## Configuration
+### Agent Teams 并行工作流
 
-### Directory Structure
+利用 Claude Code Agent Teams 实验特性，spawn 多个 Builder teammates 并行写代码：
+
+```bash
+/ccg:team-research 实现实时协作看板 API  # 1. 需求 → 约束集
+# /clear
+/ccg:team-plan kanban-api               # 2. 规划 → 并行计划
+# /clear
+/ccg:team-exec                          # 3. Builder 并行写代码
+# /clear
+/ccg:team-review                        # 4. 双模型交叉审查
+```
+
+> **vs 传统工作流**：Team 系列每步 `/clear` 隔离上下文，通过文件传递状态。适合可拆分为 3+ 独立模块的任务。
+
+## 配置
+
+### 目录结构
 
 ```
 ~/.claude/
-├── commands/ccg/       # 29+ slash commands
-├── agents/ccg/         # Sub-agents
-├── skills/ccg/         # Quality gates + multi-agent orchestration
+├── commands/ccg/       # 29+ 个斜杠命令
+├── agents/ccg/         # 子智能体
+├── skills/ccg/         # 质量关卡 + 多 Agent 协同
 ├── bin/codeagent-wrapper
 └── .ccg/
-    ├── config.toml     # CCG configuration
+    ├── config.toml     # CCG 配置
     └── prompts/
-        ├── codex/      # 6 Codex expert prompts
-        └── gemini/     # 7 Gemini expert prompts
+        ├── codex/      # 6 个 Codex 专家提示词
+        └── gemini/     # 7 个 Gemini 专家提示词
 ```
 
-### Environment Variables
+### 环境变量
 
-Configure in `~/.claude/settings.json` under `"env"`:
+在 `~/.claude/settings.json` 的 `"env"` 中配置：
 
-| Variable | Description | Default | When to change |
-|----------|-------------|---------|----------------|
-| `CODEAGENT_POST_MESSAGE_DELAY` | Wait after Codex completion (sec) | `5` | Set to `1` if Codex process hangs |
-| `CODEX_TIMEOUT` | Wrapper execution timeout (sec) | `7200` | Increase for very long tasks |
-| `BASH_DEFAULT_TIMEOUT_MS` | Claude Code Bash timeout (ms) | `120000` | Increase if commands time out |
-| `BASH_MAX_TIMEOUT_MS` | Claude Code Bash max timeout (ms) | `600000` | Increase for long builds |
+| 变量 | 说明 | 默认值 | 何时修改 |
+|------|------|--------|----------|
+| `CODEAGENT_POST_MESSAGE_DELAY` | Codex 完成后等待时间（秒） | `5` | Codex 进程挂起时设为 `1` |
+| `CODEX_TIMEOUT` | wrapper 执行超时（秒） | `7200` | 超长任务时增大 |
+| `BASH_DEFAULT_TIMEOUT_MS` | Claude Code Bash 超时（毫秒） | `120000` | 命令超时时增大 |
+| `BASH_MAX_TIMEOUT_MS` | Claude Code Bash 最大超时（毫秒） | `600000` | 长时间构建时增大 |
 
 <details>
-<summary>Example settings.json</summary>
+<summary>settings.json 示例</summary>
 
 ```json
 {
@@ -241,31 +240,31 @@ Configure in `~/.claude/settings.json` under `"env"`:
 
 </details>
 
-### MCP Configuration
+### MCP 配置
 
 ```bash
-npx ccg-workflow menu  # Select "Configure MCP"
+npx ccg-workflow menu  # 选择「配置 MCP」
 ```
 
-**Code retrieval** (choose one):
-- **ace-tool** (recommended) — Code search via `search_context`. [Official](https://augmentcode.com/) | [Third-party proxy](https://acemcp.heroman.wtf/)
-- **fast-context** (recommended) — Windsurf Fast Context, AI-powered search without full-repo indexing. Requires Windsurf account
-- **ContextWeaver** (alternative) — Local hybrid search, requires SiliconFlow API Key (free)
+**代码检索**（多选一）：
+- **ace-tool**（推荐）— 代码检索 `search_context` 可用。[官方](https://augmentcode.com/) | [第三方中转](https://acemcp.heroman.wtf/)
+- **fast-context**（推荐）— Windsurf Fast Context，AI 驱动搜索，无需全量索引。需 Windsurf 账号
+- **ContextWeaver**（备选）— 本地混合搜索，需要硅基流动 API Key（免费）
 
-**Optional tools**:
-- **Context7** — Latest library documentation (auto-installed)
-- **Playwright** — Browser automation / testing
-- **DeepWiki** — Knowledge base queries
-- **Exa** — Search engine (requires API Key)
+**辅助工具**（可选）：
+- **Context7** — 获取最新库文档（自动安装）
+- **Playwright** — 浏览器自动化 / 测试
+- **DeepWiki** — 知识库查询
+- **Exa** — 搜索引擎（需 API Key）
 
-### Auto-Authorization Hook
+### 自动授权 Hook
 
-CCG automatically installs a Hook to auto-authorize `codeagent-wrapper` commands (requires [jq](#install-jq)).
+CCG 安装时自动写入 Hook，自动授权 `codeagent-wrapper` 命令（需 [jq](#安装-jq)）。
 
 <details>
-<summary>Manual setup (for versions before v1.7.71)</summary>
+<summary>手动配置（v1.7.71 之前的版本）</summary>
 
-Add to `~/.claude/settings.json`:
+在 `~/.claude/settings.json` 中添加：
 
 ```json
 {
@@ -288,42 +287,42 @@ Add to `~/.claude/settings.json`:
 
 </details>
 
-## Utilities
+## 实用工具
 
 ```bash
-npx ccg-workflow menu  # Select "Tools"
+npx ccg-workflow menu  # 选择「实用工具」
 ```
 
-- **ccusage** — Claude Code usage analytics
-- **CCometixLine** — Status bar tool (Git + usage tracking)
+- **ccusage** — Claude Code 用量分析
+- **CCometixLine** — 状态栏工具（Git + 用量跟踪）
 
-## Update / Uninstall
+## 更新 / 卸载
 
 ```bash
-# Update
-npx ccg-workflow@latest            # npx users
-npm install -g ccg-workflow@latest  # npm global users
+# 更新
+npx ccg-workflow@latest            # npx 用户
+npm install -g ccg-workflow@latest  # npm 全局用户
 
-# Uninstall
-npx ccg-workflow  # Select "Uninstall"
-npm uninstall -g ccg-workflow  # npm global users need this extra step
+# 卸载
+npx ccg-workflow  # 选择「卸载工作流」
+npm uninstall -g ccg-workflow  # npm 全局用户需额外执行
 ```
 
-## FAQ
+## 常见问题
 
-### Codex CLI 0.80.0 process does not exit
+### Codex CLI 0.80.0 进程不退出
 
-In `--json` mode, Codex does not automatically exit after output completion.
+`--json` 模式下 Codex 完成输出后进程不会自动退出。
 
-**Fix**: Set `CODEAGENT_POST_MESSAGE_DELAY=1` in your environment variables.
+**解决**：将 `CODEAGENT_POST_MESSAGE_DELAY` 设为 `1`，详见[环境变量](#环境变量)。
 
-## Contributing
+## 参与贡献
 
-We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+欢迎贡献！请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发指南。
 
-Looking for a place to start? Check out issues labeled [`good first issue`](https://github.com/fengshao1227/ccg-workflow/labels/good%20first%20issue).
+想找一个入手点？查看标记为 [`good first issue`](https://github.com/fengshao1227/ccg-workflow/labels/good%20first%20issue) 的 Issue。
 
-## Contributors
+## 贡献者
 
 <!-- readme: contributors -start -->
 <table>
@@ -342,23 +341,23 @@ Looking for a place to start? Check out issues labeled [`good first issue`](http
 </table>
 <!-- readme: contributors -end -->
 
-## Credits
+## 致谢
 
 - [cexll/myclaude](https://github.com/cexll/myclaude) — codeagent-wrapper
-- [UfoMiao/zcf](https://github.com/UfoMiao/zcf) — Git tools
-- [GudaStudio/skills](https://github.com/GuDaStudio/skills) — Routing design
-- [ace-tool](https://linux.do/t/topic/1344562) — MCP tool
+- [UfoMiao/zcf](https://github.com/UfoMiao/zcf) — Git 工具
+- [GudaStudio/skills](https://github.com/GuDaStudio/skills) — 路由设计
+- [ace-tool](https://linux.do/t/topic/1344562) — MCP 工具
 
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fengshao1227/ccg-workflow&type=timeline&legend=top-left)](https://www.star-history.com/#fengshao1227/ccg-workflow&type=timeline&legend=top-left)
 
-## Contact
+## 联系方式
 
-- **X (Twitter)**: [@CCG_Workflow](https://x.com/CCG_Workflow) — Updates, demos, and tips
-- **Email**: [fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — Sponsorship, collaboration, or development ideas
-- **Issues**: [GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — Bug reports and feature requests
-- **Discussions**: [GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — Questions and community chat
+- **X (Twitter)**: [@CCG_Workflow](https://x.com/CCG_Workflow) — 更新动态、实战演示、使用技巧
+- **邮箱**: [fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — 赞助、合作洽谈、开发交流
+- **Issues**: [GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — Bug 反馈与功能建议
+- **讨论区**: [GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — 问题咨询与社区交流
 
 ## License
 
@@ -366,4 +365,4 @@ MIT
 
 ---
 
-v2.1.11 | [Issues](https://github.com/fengshao1227/ccg-workflow/issues) | [Contributing](./CONTRIBUTING.md)
+v2.1.11 | [Issues](https://github.com/fengshao1227/ccg-workflow/issues) | [参与贡献](./CONTRIBUTING.md)
