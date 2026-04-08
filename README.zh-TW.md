@@ -10,7 +10,7 @@
 [![Tests](https://img.shields.io/badge/Tests-139%20passed-brightgreen.svg)]()
 [![Follow on X](https://img.shields.io/badge/X-@CCG__Workflow-black?logo=x&logoColor=white)](https://x.com/CCG_Workflow)
 
-繁體中文（臺灣） | [简体中文（中国大陆）](./README.zh-CN.md) | [English](./README.md)
+繁體中文（臺灣） | [簡體中文（中國大陸）](./README.zh-CN.md) | [English](./README.md)
 
 </div>
 
@@ -393,7 +393,7 @@ npx ccg-workflow menu
 **程式碼檢索工具（擇一）**
 
 - **ace-tool**（推薦）：可透過 `search_context` 搜尋程式碼  
-  [官方網站](https://augmentcode.com/) | [第三方代理](https://acemcp.heroman.wtf/)
+  [官方網站](https://augmentcode.com/) | [第三方中轉](https://acemcp.heroman.wtf/)
 - **fast-context**（推薦）：Windsurf Fast Context，不需要完整索引整個專案，但需要 Windsurf 帳號
 - **ContextWeaver**（替代方案）：本機混合搜尋，需要 SiliconFlow API Key（免費）
 
@@ -570,7 +570,7 @@ CCG 不只有核心開發流程，也有 20+ 個偏 UI / UX 精修的指令，�
 
 ## 聯絡方式
 
-- **X（Twitter）**：[@CCG_Workflow](https://x.com/CCG_Workflow) — 最新消息、示範與使用技巧
+- **X (Twitter)**：[@CCG_Workflow](https://x.com/CCG_Workflow) — 最新消息、示範與使用技巧
 - **Email**：[fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — 贊助、合作或開發交流
 - **Issues**：[GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — 回報 Bug 與提出功能建議
 - **Discussions**：[GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — 問題討論與社群交流
