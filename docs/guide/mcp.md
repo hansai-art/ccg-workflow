@@ -42,26 +42,17 @@ Windsurf 的 Fast Context。不需要給整個倉庫建索引就能搜，速度�
 
 ## 自動授權
 
-CCG 裝好後會自動配一個 Hook，讓 `codeagent-wrapper` 的命令不用每次都手動確認。需要裝 [jq](https://jqlang.github.io/jq/)。
+CCG 裝好後會自動寫入 `permissions.allow`，讓 `codeagent-wrapper` 的命令不用每次都手動確認，不需要另外安裝 `jq`。
 
-::: details v1.7.71 之前需要手動配
+::: details v1.7.89 之前需要手動配
 
 在 `~/.claude/settings.json` 里加：
 
 ```json
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' 2>/dev/null | grep -q 'codeagent-wrapper' && echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"permissionDecision\": \"allow\", \"permissionDecisionReason\": \"codeagent-wrapper auto-approved\"}}' || true",
-            "timeout": 1
-          }
-        ]
-      }
+  "permissions": {
+    "allow": [
+      "Bash(*codeagent-wrapper*)"
     ]
   }
 }

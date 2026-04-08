@@ -50,7 +50,6 @@ Codex   Gemini
 |------|------|------|
 | **Node.js 20+** | 是 | `ora@9.x` 要求 Node >= 20，Node 18 会报 `SyntaxError` |
 | **Claude Code CLI** | 是 | [安装方法](#安装-claude-code) |
-| **jq** | 是 | 用于自动授权 Hook（[安装方法](#安装-jq)） |
 | **Codex CLI** | 否 | 启用后端路由 |
 | **Gemini CLI** | 否 | 启用前端路由 |
 
@@ -62,20 +61,14 @@ npx ccg-workflow
 
 首次运行会提示选择语言（简体中文 / English），选择后自动保存，后续无需再选。
 
-### 安装 jq
+### 30 秒先跑起来
 
-```bash
-# macOS
-brew install jq
+1. 运行 `npx ccg-workflow`
+2. 用 Claude Code 打开任意项目
+3. 先试这条：
 
-# Linux (Debian/Ubuntu)
-sudo apt install jq
-
-# Linux (RHEL/CentOS)
-sudo yum install jq
-
-# Windows
-choco install jq   # 或: scoop install jq
+```text
+/ccg:frontend 给登录页加个暗色模式切换按钮
 ```
 
 ### 安装 Claude Code
@@ -259,27 +252,18 @@ npx ccg-workflow menu  # 选择「配置 MCP」
 
 ### 自动授权 Hook
 
-CCG 安装时自动写入 Hook，自动授权 `codeagent-wrapper` 命令（需 [jq](#安装-jq)）。
+CCG 安装时会自动写入 `permissions.allow`，让 `codeagent-wrapper` 命令不用每次手动确认，不需要另外安装 `jq`。
 
 <details>
-<summary>手动配置（v1.7.71 之前的版本）</summary>
+<summary>手动配置（v1.7.89 之前的版本）</summary>
 
 在 `~/.claude/settings.json` 中添加：
 
 ```json
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' 2>/dev/null | grep -q 'codeagent-wrapper' && echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"permissionDecision\": \"allow\", \"permissionDecisionReason\": \"codeagent-wrapper auto-approved\"}}' || true",
-            "timeout": 1
-          }
-        ]
-      }
+  "permissions": {
+    "allow": [
+      "Bash(*codeagent-wrapper*)"
     ]
   }
 }

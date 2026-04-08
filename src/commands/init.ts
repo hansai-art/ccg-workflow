@@ -868,6 +868,16 @@ export async function init(options: InitOptions = {}): Promise<void> {
       console.log(ansis.gray('       → ~/.claude/rules/ccg-skills.md'))
     }
 
+    console.log()
+    console.log(ansis.cyan(`  ${i18n.t('init:nextStepsTitle')}`))
+    console.log(`    ${ansis.green('1.')} ${i18n.t('init:nextStepsRestart')}`)
+    console.log(`    ${ansis.green('2.')} ${i18n.t('init:nextStepsTryCommand')}`)
+    const exampleCommand = language === 'en'
+      ? '/ccg:frontend add a dark mode toggle to the login page'
+      : '/ccg:frontend 給登入頁加個暗色模式切換按鈕'
+    console.log(ansis.gray(`       ${exampleCommand}`))
+    console.log(`    ${ansis.green('3.')} ${i18n.t('init:nextStepsMenu', { cmd: 'npx ccg-workflow menu' })}`)
+
     // Show errors if any
     if (result.errors.length > 0) {
       console.log()

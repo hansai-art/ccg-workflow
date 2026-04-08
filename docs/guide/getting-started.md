@@ -28,7 +28,6 @@ Claude 綜合分析結果，寫入程式碼 ← 你能看到每一行改動
 
 - **Node.js 20+** — 低於 20 會報錯，不要問為什麼（`ora@9.x` 的鍋）
 - **Claude Code CLI** — 沒有這個什麼都跑不了
-- **jq** — 自動授權 Hook 要用
 - **Codex CLI** — 可選，裝了才有後端路由
 - **Gemini CLI** — 可選，裝了才有前端路由
 
@@ -40,29 +39,15 @@ npx ccg-workflow
 
 第一次跑會讓你選語言，選完就不問了。
 
-### jq 怎麼裝
+### 30 秒先試一次
 
-::: code-group
+1. 執行 `npx ccg-workflow`
+2. 用 Claude Code 打開任意專案
+3. 先試這條：
 
-```bash [macOS]
-brew install jq
+```text
+/ccg:frontend 給登入頁加個暗色模式切換按鈕
 ```
-
-```bash [Debian / Ubuntu]
-sudo apt install jq
-```
-
-```bash [RHEL / CentOS]
-sudo yum install jq
-```
-
-```bash [Windows]
-choco install jq
-# 或者
-scoop install jq
-```
-
-:::
 
 ### Claude Code 怎麼裝
 

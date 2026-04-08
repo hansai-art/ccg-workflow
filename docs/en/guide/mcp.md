@@ -42,26 +42,17 @@ So when you run `/ccg:codex-exec`, Codex can use MCP search directly. No extra s
 
 ## Auto-authorization
 
-After installation, CCG sets up a Hook so `codeagent-wrapper` commands don't need manual confirmation every time. Requires [jq](https://jqlang.github.io/jq/).
+After installation, CCG writes a `permissions.allow` rule so `codeagent-wrapper` commands do not need manual confirmation every time. No extra `jq` setup is required.
 
-::: details Manual setup (before v1.7.71)
+::: details Manual setup (before v1.7.89)
 
 Add to `~/.claude/settings.json`:
 
 ```json
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' 2>/dev/null | grep -q 'codeagent-wrapper' && echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"permissionDecision\": \"allow\", \"permissionDecisionReason\": \"codeagent-wrapper auto-approved\"}}' || true",
-            "timeout": 1
-          }
-        ]
-      }
+  "permissions": {
+    "allow": [
+      "Bash(*codeagent-wrapper*)"
     ]
   }
 }

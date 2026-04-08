@@ -51,7 +51,6 @@ External models have no write access — they only return patches, which Claude 
 |------------|----------|-------|
 | **Node.js 20+** | Yes | `ora@9.x` requires Node >= 20. Node 18 causes `SyntaxError` |
 | **Claude Code CLI** | Yes | [Install guide](#install-claude-code) |
-| **jq** | Yes | Used for auto-authorization hook ([install](#install-jq)) |
 | **Codex CLI** | No | Enables backend routing |
 | **Gemini CLI** | No | Enables frontend routing |
 
@@ -63,20 +62,14 @@ npx ccg-workflow
 
 On first run, CCG prompts you to select a language (English / Chinese). This preference is saved for all future sessions.
 
-### Install jq
+### First run in 30 seconds
 
-```bash
-# macOS
-brew install jq
+1. Run `npx ccg-workflow`
+2. Open any project in Claude Code
+3. Try:
 
-# Linux (Debian/Ubuntu)
-sudo apt install jq
-
-# Linux (RHEL/CentOS)
-sudo yum install jq
-
-# Windows
-choco install jq   # or: scoop install jq
+```text
+/ccg:frontend add a dark mode toggle to the login page
 ```
 
 ### Install Claude Code
@@ -260,27 +253,18 @@ npx ccg-workflow menu  # Select "Configure MCP"
 
 ### Auto-Authorization Hook
 
-CCG automatically installs a Hook to auto-authorize `codeagent-wrapper` commands (requires [jq](#install-jq)).
+CCG automatically adds a `permissions.allow` rule so `codeagent-wrapper` commands do not need manual confirmation. No extra `jq` setup is required.
 
 <details>
-<summary>Manual setup (for versions before v1.7.71)</summary>
+<summary>Manual setup (for versions before v1.7.89)</summary>
 
 Add to `~/.claude/settings.json`:
 
 ```json
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' 2>/dev/null | grep -q 'codeagent-wrapper' && echo '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"permissionDecision\": \"allow\", \"permissionDecisionReason\": \"codeagent-wrapper auto-approved\"}}' || true",
-            "timeout": 1
-          }
-        ]
-      }
+  "permissions": {
+    "allow": [
+      "Bash(*codeagent-wrapper*)"
     ]
   }
 }

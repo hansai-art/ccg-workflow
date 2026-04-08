@@ -28,7 +28,6 @@ There's also **codex-exec mode**: Codex writes the code instead, then Claude + G
 
 - **Node.js 20+** — Below 20 will break (`ora@9.x` requires it)
 - **Claude Code CLI** — Nothing works without this
-- **jq** — For the auto-authorization hook
 - **Codex CLI** — Optional. Enables backend routing
 - **Gemini CLI** — Optional. Enables frontend routing
 
@@ -40,29 +39,15 @@ npx ccg-workflow
 
 First run asks you to pick a language. After that, it remembers.
 
-### Installing jq
+### First run in 30 seconds
 
-::: code-group
+1. Run `npx ccg-workflow`
+2. Open any project in Claude Code
+3. Try:
 
-```bash [macOS]
-brew install jq
+```text
+/ccg:frontend add a dark mode toggle to the login page
 ```
-
-```bash [Debian / Ubuntu]
-sudo apt install jq
-```
-
-```bash [RHEL / CentOS]
-sudo yum install jq
-```
-
-```bash [Windows]
-choco install jq
-# or
-scoop install jq
-```
-
-:::
 
 ### Installing Claude Code
 
