@@ -1,4 +1,4 @@
-# CCG - Claude + Codex + Gemini 多模型協作
+# CCG - Claude + Codex + Gemini 多模型協作工作流
 
 <div align="center">
 
@@ -9,58 +9,61 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-green.svg)](https://claude.ai/code)
 [![Tests](https://img.shields.io/badge/Tests-139%20passed-brightgreen.svg)]()
 [![Follow on X](https://img.shields.io/badge/X-@CCG__Workflow-black?logo=x&logoColor=white)](https://x.com/CCG_Workflow)
+![star](https://atomgit.com/fengshao1227/ccg-workflow/star/badge.svg)
 
-正體中文 | [简体中文](./README.zh-CN.md) | [English](./README.md)
+[繁體中文](./README.md) | [簡體中文](./README.zh-CN.md) | [English](./README.en.md)
 
 </div>
 
-Claude Code 編排 Codex + Gemini 的多模型協作開發系統。前端任務路由至 Gemini，後端任務路由至 Codex，Claude 負責編排決策和程式碼稽核。
+> 備註: 本檔案提供與 `README.md` 相同內容的繁體中文備用路徑。
 
-## 為什麼選擇 CCG？
+CCG 是一套由 Claude Code 負責編排、並串接 Codex 與 Gemini 的多模型協作開發系統。前端任務自動交給 Gemini，後端任務自動交給 Codex，而 Claude 會負責整體流程控管、結果整合與程式碼審查。
 
-- **零配置模型路由** — 前端任務自動走 Gemini，後端任務自動走 Codex，無需手動切換。
-- **安全設計** — 外部模型無寫入許可權，僅返回 Patch，由 Claude 稽核後應用。
-- **29+ 個斜槓命令** — 從規劃到執行、Git 工作流到程式碼審查，透過 `/ccg:*` 一站式訪問。
-- **規範驅動開發** — 整合 [OPSX](https://github.com/fission-ai/opsx)，將模糊需求變成可驗證約束，讓 AI 沒法自由發揮。
+## 為什麼要用 CCG？
 
-## 架構
+- **模型自動分流**：前端工作自動走 Gemini，後端工作自動走 Codex，不需要手動切換模型。
+- **安全設計優先**：外部模型沒有直接寫入權限，只能回傳 patch，最後由 Claude 審查後再套用。
+- **29+ 個斜線指令**：從規劃、實作、除錯、測試到 Git 工作流，都可以透過 `/ccg:*` 使用。
+- **規格驅動開發**：整合 [OPSX](https://github.com/fission-ai/opsx)，把模糊需求轉成可驗證的限制條件，降低 AI 自由發揮造成的偏差。
 
+## 架構概念
+
+```text
+Claude Code（總控 / 編排者）
+           │
+       ┌───┴───┐
+       ↓       ↓
+    Codex   Gemini
+   （後端） （前端）
+       │       │
+       └───┬───┘
+           ↓
+      統一 Patch 結果
 ```
-Claude Code (編排)
-       │
-   ┌───┴───┐
-   ↓       ↓
-Codex   Gemini
-(後端)   (前端)
-   │       │
-   └───┬───┘
-       ↓
-  Unified Patch
-```
 
-外部模型無寫入許可權，僅返回 Patch，由 Claude 稽核後應用。
+外部模型本身不會直接改你的專案檔案，而是先回傳建議變更，再由 Claude 做最後把關。
 
-> **🎬 [檢視 CCG 實戰演示 →](https://x.com/CCG_Workflow/status/2038923720610463876)** — X 上的多模型協作真實案例
+> **🎬 [觀看 CCG 實際示範 →](https://x.com/CCG_Workflow/status/2038923720610463876)** — 在 X 上查看真實的多模型協作流程
 
 ## 快速開始
 
-### 前置條件
+### 安裝前你需要準備什麼？
 
-| 依賴 | 必需 | 說明 |
-|------|------|------|
-| **Node.js 20+** | 是 | `ora@9.x` 要求 Node >= 20，Node 18 會報 `SyntaxError` |
-| **Claude Code CLI** | 是 | [安裝方法](#安裝-claude-code) |
-| **jq** | 是 | 用於自動授權 Hook（[安裝方法](#安裝-jq)） |
-| **Codex CLI** | 否 | 啟用後端路由 |
-| **Gemini CLI** | 否 | 啟用前端路由 |
+| 需求 | 是否必要 | 說明 |
+|------|----------|------|
+| **Node.js 20 以上** | 必要 | `ora@9.x` 需要 Node.js 20 以上版本，Node 18 無法正常使用 |
+| **Claude Code CLI** | 必要 | 這是 CCG 主要運作環境 |
+| **jq** | 必要 | 用於自動授權 Hook |
+| **Codex CLI** | 選用 | 安裝後可啟用後端自動分流 |
+| **Gemini CLI** | 選用 | 安裝後可啟用前端自動分流 |
 
-### 安裝
+### 最快安裝方式
 
 ```bash
 npx ccg-workflow
 ```
 
-首次執行會提示選擇語言（簡體中文 / English），選擇後自動儲存，後續無需再選。
+第一次執行時，CCG 會請你選擇顯示語言，之後會自動記住你的偏好設定。
 
 ### 安裝 jq
 
@@ -68,164 +71,306 @@ npx ccg-workflow
 # macOS
 brew install jq
 
-# Linux (Debian/Ubuntu)
+# Ubuntu / Debian
 sudo apt install jq
 
-# Linux (RHEL/CentOS)
+# RHEL / CentOS
 sudo yum install jq
 
 # Windows
-choco install jq   # 或: scoop install jq
+choco install jq   # 或改用: scoop install jq
 ```
 
 ### 安裝 Claude Code
 
 ```bash
-npx ccg-workflow menu  # 選擇「安裝 Claude Code」
+npx ccg-workflow menu
 ```
 
-支援：npm、homebrew、curl、powershell、cmd。
+然後在選單中選擇 **「安裝 Claude Code」**。  
+支援的安裝方式包含：npm、Homebrew、curl、PowerShell、cmd。
 
-## 命令
+## 新手完整教學：從零開始把 CCG 跑起來
+
+如果你是第一次接觸 CCG，建議照下面步驟做；不要跳步，成功率最高。
+
+### 步驟 1：確認 Node.js 版本
+
+在終端機輸入：
+
+```bash
+node -v
+```
+
+你應該看到 `v20.x` 或更新版本。  
+如果版本低於 20，請先到 [Node.js 官方網站](https://nodejs.org/) 安裝 Node.js 20 以上版本，再繼續後面的步驟。
+
+### 步驟 2：安裝 jq
+
+請依照你的作業系統執行上面的 jq 安裝指令。安裝完成後，用下面指令確認：
+
+```bash
+jq --version
+```
+
+有顯示版本號就代表安裝成功。
+
+### 步驟 3：安裝並登入 Claude Code
+
+先執行：
+
+```bash
+npx ccg-workflow menu
+```
+
+在選單中選擇 **「安裝 Claude Code」**，完成後再依照 Claude Code 的畫面提示登入帳號。
+
+### 步驟 4：第一次安裝 CCG
+
+在你的專案資料夾中執行：
+
+```bash
+npx ccg-workflow
+```
+
+第一次執行時通常會看到幾個設定步驟：
+
+1. 選擇語言
+2. 選擇是否安裝 MCP 工具
+3. 選擇模型路由偏好
+4. 寫入 CCG 設定到 `~/.claude/` 相關目錄
+
+如果你是新手，可以先用預設值完成安裝，之後再慢慢調整。
+
+### 步驟 5：先用最簡單的方式開始
+
+如果你還沒有安裝 Codex CLI 或 Gemini CLI，也沒關係。  
+你仍然可以先用 CCG 的指令與流程；之後再補裝其他模型工具即可。
+
+建議第一個嘗試的指令：
+
+```text
+/ccg:plan 幫我規劃一個使用者登入功能
+```
+
+這條指令適合新手，因為它會先幫你整理需求與規劃，不會一開始就大量修改程式。
+
+### 步驟 6：看懂 CCG 做了什麼
+
+當你執行 `/ccg:plan`、`/ccg:workflow` 或 `/ccg:spec-*` 時，可以這樣理解：
+
+1. **你提出需求**
+2. **CCG 判斷任務類型**
+3. **前端交給 Gemini、後端交給 Codex**
+4. **Claude 彙整結果並進行審查**
+5. **最後輸出計畫、建議或 patch**
+
+你可以把它想成：**Claude 是專案經理，Codex 與 Gemini 是分工合作的工程師。**
+
+### 步驟 7：你的第一個推薦流程
+
+如果你想穩穩地上手，建議用下面順序：
+
+```text
+1. /ccg:plan      先產生計畫
+2. 檢查計畫內容是否正確
+3. /ccg:execute   依照計畫執行
+4. /ccg:review    做程式碼審查
+```
+
+這是最容易理解、也最不容易出錯的入門路線。
+
+### 步驟 8：什麼時候該用哪個指令？
+
+| 使用情境 | 建議指令 | 原因 |
+|----------|----------|------|
+| 我只想先整理需求 | `/ccg:plan` | 風險低，適合先確認方向 |
+| 我要直接做完整功能 | `/ccg:workflow` | 一次走完整開發流程 |
+| 我只改前端 | `/ccg:frontend` | 直接交給 Gemini |
+| 我只改後端 | `/ccg:backend` | 直接交給 Codex |
+| 我想更嚴謹，不希望 AI 自由發揮 | `/ccg:spec-*` | 先把需求轉成約束條件 |
+| 我有大型任務，要拆多人並行 | `/ccg:team-*` | 適合可拆成多模組的工作 |
+
+### 步驟 9：新手最常遇到的問題
+
+#### 問題 1：指令跑不起來
+
+先檢查：
+
+- Node.js 是否為 20 或更新版本
+- `jq` 是否已安裝
+- Claude Code 是否已安裝且可正常登入
+
+#### 問題 2：我沒有 Codex CLI / Gemini CLI
+
+不用擔心，可以先用 CCG 的基本流程。等你熟悉後，再補裝其他 CLI 來啟用完整的多模型分流能力。
+
+#### 問題 3：我不知道該下什麼 prompt
+
+先用自然語言描述需求即可，例如：
+
+```text
+/ccg:plan 幫我在現有專案加入 email / password 登入、註冊與忘記密碼流程
+```
+
+先把需求說清楚，比寫得很花俏更重要。
+
+## 指令總覽
 
 ### 開發工作流
 
-| 命令 | 說明 | 模型 |
-|------|------|------|
-| `/ccg:workflow` | 6 階段完整工作流 | Codex + Gemini |
-| `/ccg:plan` | 多模型協作規劃 (Phase 1-2) | Codex + Gemini |
-| `/ccg:execute` | 多模型協作執行 (Phase 3-5) | Codex + Gemini + Claude |
-| `/ccg:codex-exec` | Codex 全權執行（計劃 → 程式碼 → 稽核） | Codex + 多模型稽核 |
-| `/ccg:feat` | 智慧功能開發 | 自動路由 |
-| `/ccg:frontend` | 前端任務（快速模式） | Gemini |
-| `/ccg:backend` | 後端任務（快速模式） | Codex |
+| 指令 | 用途 | 使用模型 |
+|------|------|----------|
+| `/ccg:workflow` | 完整 6 階段開發流程 | Codex + Gemini |
+| `/ccg:plan` | 多模型協作規劃（Phase 1-2） | Codex + Gemini |
+| `/ccg:execute` | 多模型協作執行（Phase 3-5） | Codex + Gemini + Claude |
+| `/ccg:codex-exec` | 由 Codex 主導執行（規劃 → 撰寫程式碼 → 審查） | Codex + 多模型審查 |
+| `/ccg:feat` | 智慧型功能開發 | 自動分流 |
+| `/ccg:frontend` | 前端任務快速模式 | Gemini |
+| `/ccg:backend` | 後端任務快速模式 | Codex |
 
-### 分析與質量
+### 分析與品質
 
-| 命令 | 說明 | 模型 |
-|------|------|------|
+| 指令 | 用途 | 使用模型 |
+|------|------|----------|
 | `/ccg:analyze` | 技術分析 | Codex + Gemini |
-| `/ccg:debug` | 問題診斷 + 修復 | Codex + Gemini |
+| `/ccg:debug` | 問題診斷與修復 | Codex + Gemini |
 | `/ccg:optimize` | 效能最佳化 | Codex + Gemini |
-| `/ccg:test` | 測試生成 | 自動路由 |
-| `/ccg:review` | 程式碼審查（自動 git diff） | Codex + Gemini |
-| `/ccg:enhance` | Prompt 增強 | 內建 |
+| `/ccg:test` | 產生測試 | 自動分流 |
+| `/ccg:review` | 程式碼審查（自動讀取 git diff） | Codex + Gemini |
+| `/ccg:enhance` | 強化提示詞 | 內建 |
 
-### OPSX 規範驅動
+### OPSX 規格驅動工作流
 
-| 命令 | 說明 |
+| 指令 | 用途 |
 |------|------|
 | `/ccg:spec-init` | 初始化 OPSX 環境 |
-| `/ccg:spec-research` | 需求 → 約束集 |
-| `/ccg:spec-plan` | 約束 → 零決策計劃 |
-| `/ccg:spec-impl` | 按計劃執行 + 歸檔 |
+| `/ccg:spec-research` | 把需求轉成限制條件 |
+| `/ccg:spec-plan` | 把限制條件轉成零決策計畫 |
+| `/ccg:spec-impl` | 依照計畫實作並歸檔 |
 | `/ccg:spec-review` | 雙模型交叉審查 |
 
 ### Agent Teams（v1.7.60+）
 
-| 命令 | 說明 |
+| 指令 | 用途 |
 |------|------|
-| `/ccg:team-research` | 需求 → 約束集（並行探索） |
-| `/ccg:team-plan` | 約束 → 並行實施計劃 |
-| `/ccg:team-exec` | spawn Builder teammates 並行寫程式碼 |
+| `/ccg:team-research` | 需求分析與限制整理（可平行探索） |
+| `/ccg:team-plan` | 產生可平行執行的實作計畫 |
+| `/ccg:team-exec` | 啟動多個 Builder 隊友代理同時寫程式 |
 | `/ccg:team-review` | 雙模型交叉審查 |
 
-> **前置條件**：需在 `settings.json` 中啟用：`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
+> **前置條件**：請在 `settings.json` 中啟用 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
 
 ### Git 工具
 
-| 命令 | 說明 |
+| 指令 | 用途 |
 |------|------|
-| `/ccg:commit` | 智慧提交（conventional commit 格式） |
-| `/ccg:rollback` | 互動式回滾 |
+| `/ccg:commit` | 智慧提交（Conventional Commit 格式） |
+| `/ccg:rollback` | 互動式回復變更 |
 | `/ccg:clean-branches` | 清理已合併分支 |
-| `/ccg:worktree` | Worktree 管理 |
+| `/ccg:worktree` | 管理 Git worktree |
 
-### 專案管理
+### 專案設定
 
-| 命令 | 說明 |
+| 指令 | 用途 |
 |------|------|
-| `/ccg:init` | 初始化專案 CLAUDE.md |
-| `/ccg:context` | 專案上下文管理（.context 初始化/日誌/壓縮/歷史） |
+| `/ccg:init` | 初始化專案用的 `CLAUDE.md` |
+| `/ccg:context` | 管理專案上下文（初始化、記錄、壓縮、歷史） |
 
-## 工作流指南
+## 常見工作流教學
 
-### 規劃與執行分離
+### 教學 1：先規劃，再執行
+
+這是最推薦給新手的模式。
 
 ```bash
-# 1. 生成實施計劃
-/ccg:plan 實現使用者認證功能
+# 1. 先產生實作計畫
+/ccg:plan 實作使用者登入功能
 
-# 2. 審查計劃（可修改）
-# 計劃儲存至 .claude/plan/user-auth.md
+# 2. 檢查計畫內容
+# 計畫通常會存到 .claude/plan/user-auth.md
 
-# 3a. 執行計劃（Claude 重構）— 精細控制
+# 3a. 交給 Claude 主導執行
 /ccg:execute .claude/plan/user-auth.md
 
-# 3b. 執行計劃（Codex 全權）— 高效執行，Claude token 極低
+# 3b. 交給 Codex 主導執行（更省 Claude token）
 /ccg:codex-exec .claude/plan/user-auth.md
 ```
 
-### OPSX 規範驅動工作流
+**適合誰？**  
+想先確認方向，避免一開始就讓 AI 直接大改專案的人。
 
-整合 [OPSX 架構](https://github.com/fission-ai/opsx)，把需求變成約束，讓 AI 沒法自由發揮：
+### 教學 2：使用 OPSX 做更嚴謹的開發
 
-```bash
-/ccg:spec-init                       # 初始化 OPSX 環境
-/ccg:spec-research 實現使用者認證        # 研究需求 → 輸出約束集
-/ccg:spec-plan                       # 並行分析 → 零決策計劃
-/ccg:spec-impl                       # 按計劃執行
-/ccg:spec-review                     # 獨立審查（隨時可用）
-```
-
-> **提示**：`/ccg:spec-*` 命令內部呼叫 `/opsx:*`。每階段之間可 `/clear`，狀態存在 `openspec/` 目錄，不怕上下文爆。
-
-### Agent Teams 並行工作流
-
-利用 Claude Code Agent Teams 實驗特性，spawn 多個 Builder teammates 並行寫程式碼：
+如果你不想讓 AI 自己猜架構，建議使用這組指令：
 
 ```bash
-/ccg:team-research 實現實時協作看板 API  # 1. 需求 → 約束集
-# /clear
-/ccg:team-plan kanban-api               # 2. 規劃 → 並行計劃
-# /clear
-/ccg:team-exec                          # 3. Builder 並行寫程式碼
-# /clear
-/ccg:team-review                        # 4. 雙模型交叉審查
+/ccg:spec-init
+/ccg:spec-research 實作使用者登入
+/ccg:spec-plan
+/ccg:spec-impl
+/ccg:spec-review
 ```
 
-> **vs 傳統工作流**：Team 系列每步 `/clear` 隔離上下文，透過檔案傳遞狀態。適合可拆分為 3+ 獨立模組的任務。
+這套流程的核心想法是：
 
-## 配置
+1. 先整理需求
+2. 再轉成限制條件
+3. 再做計畫
+4. 最後才實作
 
-### 目錄結構
+> **提示**：`/ccg:spec-*` 內部會呼叫 `/opsx:*`。你可以在每個階段之間使用 `/clear`，因為狀態會保存在 `openspec/` 目錄。
 
+### 教學 3：使用 Agent Teams 處理大型任務
+
+如果你的功能可以拆成多個模組同步進行，可以改用 Team 系列：
+
+```bash
+/ccg:team-research 實作即時協作看板 API
+# /clear
+/ccg:team-plan kanban-api
+# /clear
+/ccg:team-exec
+# /clear
+/ccg:team-review
 ```
+
+這種方式特別適合：
+
+- API、資料庫、前端畫面可以分開做
+- 任務很大，單一上下文容易爆掉
+- 你希望拆成多個 builder 同步完成
+
+## 設定方式
+
+### 安裝後的目錄結構
+
+```text
 ~/.claude/
-├── commands/ccg/       # 29+ 個斜槓命令
-├── agents/ccg/         # 子智慧體
-├── skills/ccg/         # 質量關卡 + 多 Agent 協同
+├── commands/ccg/       # 29+ 個斜線指令
+├── agents/ccg/         # 子代理
+├── skills/ccg/         # 品質關卡與多代理協作能力
 ├── bin/codeagent-wrapper
 └── .ccg/
-    ├── config.toml     # CCG 配置
+    ├── config.toml     # CCG 設定檔
     └── prompts/
-        ├── codex/      # 6 個 Codex 專家提示詞
-        └── gemini/     # 7 個 Gemini 專家提示詞
+        ├── codex/      # 6 組 Codex 專家提示詞
+        └── gemini/     # 7 組 Gemini 專家提示詞
 ```
 
 ### 環境變數
 
-在 `~/.claude/settings.json` 的 `"env"` 中配置：
+請在 `~/.claude/settings.json` 的 `"env"` 區塊內設定：
 
-| 變數 | 說明 | 預設值 | 何時修改 |
-|------|------|--------|----------|
-| `CODEAGENT_POST_MESSAGE_DELAY` | Codex 完成後等待時間（秒） | `5` | Codex 程序掛起時設為 `1` |
-| `CODEX_TIMEOUT` | wrapper 執行超時（秒） | `7200` | 超長任務時增大 |
-| `BASH_DEFAULT_TIMEOUT_MS` | Claude Code Bash 超時（毫秒） | `120000` | 命令超時時增大 |
-| `BASH_MAX_TIMEOUT_MS` | Claude Code Bash 最大超時（毫秒） | `600000` | 長時間構建時增大 |
+| 變數 | 說明 | 預設值 | 什麼時候需要調整 |
+|------|------|--------|------------------|
+| `CODEAGENT_POST_MESSAGE_DELAY` | Codex 完成後等待秒數 | `5` | 如果 Codex 程序卡住，可改成 `1` |
+| `CODEX_TIMEOUT` | wrapper 執行逾時秒數 | `7200` | 當任務非常大且執行時間很長時 |
+| `BASH_DEFAULT_TIMEOUT_MS` | Claude Code Bash 預設逾時（毫秒） | `120000` | 指令常常超時時 |
+| `BASH_MAX_TIMEOUT_MS` | Claude Code Bash 最大逾時（毫秒） | `600000` | 建置或測試時間很長時 |
 
 <details>
-<summary>settings.json 示例</summary>
+<summary>settings.json 範例</summary>
 
 ```json
 {
@@ -240,31 +385,37 @@ npx ccg-workflow menu  # 選擇「安裝 Claude Code」
 
 </details>
 
-### MCP 配置
+### MCP 設定
 
 ```bash
-npx ccg-workflow menu  # 選擇「配置 MCP」
+npx ccg-workflow menu
 ```
 
-**程式碼檢索**（多選一）：
-- **ace-tool**（推薦）— 程式碼檢索 `search_context` 可用。[官方](https://augmentcode.com/) | [第三方中轉](https://acemcp.heroman.wtf/)
-- **fast-context**（推薦）— Windsurf Fast Context，AI 驅動搜尋，無需全量索引。需 Windsurf 賬號
-- **ContextWeaver**（備選）— 本地混合搜尋，需要矽基流動 API Key（免費）
+然後在選單中選擇 **「Configure MCP」**。
 
-**輔助工具**（可選）：
-- **Context7** — 獲取最新庫文件（自動安裝）
-- **Playwright** — 瀏覽器自動化 / 測試
-- **DeepWiki** — 知識庫查詢
-- **Exa** — 搜尋引擎（需 API Key）
+**程式碼檢索工具（擇一）**
+
+- **ace-tool**（推薦）：可透過 `search_context` 搜尋程式碼  
+  [官方網站](https://augmentcode.com/) | [第三方中轉](https://acemcp.heroman.wtf/)
+- **fast-context**（推薦）：Windsurf Fast Context，不需要完整索引整個專案，但需要 Windsurf 帳號
+- **ContextWeaver**（替代方案）：本機混合搜尋，需要 SiliconFlow API Key（免費）
+
+**選用工具**
+
+- **Context7**：取得最新函式庫文件（自動安裝）
+- **Playwright**：瀏覽器自動化與測試
+- **DeepWiki**：知識庫查詢
+- **Exa**：搜尋引擎（需要 API Key）
 
 ### 自動授權 Hook
 
-CCG 安裝時自動寫入 Hook，自動授權 `codeagent-wrapper` 命令（需 [jq](#安裝-jq)）。
+CCG 安裝時會自動寫入 Hook，讓 `codeagent-wrapper` 可以被自動授權執行。  
+這個功能需要先安裝 [jq](#安裝-jq)。
 
 <details>
-<summary>手動配置（v1.7.71 之前的版本）</summary>
+<summary>手動設定方式（v1.7.71 以前版本適用）</summary>
 
-在 `~/.claude/settings.json` 中新增：
+請把以下內容加入 `~/.claude/settings.json`：
 
 ```json
 {
@@ -290,37 +441,104 @@ CCG 安裝時自動寫入 Hook，自動授權 `codeagent-wrapper` 命令（需 [
 ## 實用工具
 
 ```bash
-npx ccg-workflow menu  # 選擇「實用工具」
+npx ccg-workflow menu
 ```
 
-- **ccusage** — Claude Code 用量分析
-- **CCometixLine** — 狀態列工具（Git + 用量跟蹤）
+在選單中選擇 **「工具」**。
 
-## 更新 / 解除安裝
+- **ccusage**：分析 Claude Code 使用量
+- **CCometixLine**：狀態列工具，可顯示 Git 與使用量資訊
+
+## 更新與解除安裝
 
 ```bash
 # 更新
-npx ccg-workflow@latest            # npx 使用者
-npm install -g ccg-workflow@latest  # npm 全域性使用者
+npx ccg-workflow@latest
+npm install -g ccg-workflow@latest
 
 # 解除安裝
-npx ccg-workflow  # 選擇「解除安裝工作流」
-npm uninstall -g ccg-workflow  # npm 全域性使用者需額外執行
+npx ccg-workflow
+npm uninstall -g ccg-workflow
 ```
+
+如果你是用 `npx` 體驗版方式使用，通常直接重新執行最新版即可。  
+如果你是全域安裝，記得一併更新或移除全域套件。
 
 ## 常見問題
 
-### Codex CLI 0.80.0 程序不退出
+### Codex CLI 0.80.0 結束後程序不會退出
 
-`--json` 模式下 Codex 完成輸出後程序不會自動退出。
+在 `--json` 模式下，Codex 即使已完成輸出，也可能不會自動結束程序。
 
-**解決**：將 `CODEAGENT_POST_MESSAGE_DELAY` 設為 `1`，詳見[環境變數](#環境變數)。
+**解法**：把 `CODEAGENT_POST_MESSAGE_DELAY` 設為 `1`。詳見上方的[環境變數](#環境變數)說明。
+
+## 實戰建議與使用心得
+
+### 哪些情境最適合用 CCG？
+
+| 情境 | 建議 |
+|------|------|
+| 改一行 CSS、修 typo | 直接用 Claude Code 就夠了 |
+| 純前端頁面或元件 | 用 `/ccg:frontend` |
+| 純後端 API 或服務 | 用 `/ccg:backend` |
+| 需要同時改前後端的完整功能 | 用 `/ccg:workflow` 或 `/ccg:team-*` |
+| 對架構要求很高、不希望 AI 自由猜測 | 用 `/ccg:spec-*` |
+
+一個簡單判斷方式：**如果你覺得這次改動會影響 3 個以上檔案，就很值得試 CCG。**
+
+### 沒裝 Codex CLI 或 Gemini CLI，可以先用嗎？
+
+可以。CCG 的重點不只是模型分流，也包含流程紀律、指令封裝與 Claude 的最終審查。你可以先熟悉整個工作方式，再逐步把 Codex CLI 與 Gemini CLI 補上。
+
+### 可以跟原本自己的工作流共存嗎？
+
+可以，通常不會衝突：
+
+- 所有指令都有 `/ccg:` 前綴
+- CCG 的 skills 會安裝在 `~/.claude/skills/ccg/`
+- 你可以只在大型任務時使用 CCG，日常小修改仍維持原本流程
+
+### OPSX 真正的價值是什麼？
+
+它最大的價值，是讓 AI **先理解限制，再開始實作**。
+
+很多人遇到的問題不是 AI 不會寫程式，而是：
+
+> AI 寫得出來，但不是你真正想要的架構或規格。
+
+OPSX 的流程是：**需求 → 限制條件 → 計畫 → 實作**。  
+這樣你可以在真正改程式之前，就先把方向校正好。
+
+### Windows 使用者要注意什麼？
+
+- 若互動式選單在你的終端機不穩定，可考慮改用非互動流程
+- `codeagent-wrapper` 需要 `jq`
+- 若 MCP 設定異常，可重新執行設定流程檢查
+
+### 怎麼省 Claude token？
+
+- 使用 `/ccg:codex-exec`，讓 Codex 主導執行，Claude 最後再審查
+- 使用 Agent Teams 流程時，在階段之間搭配 `/clear`
+- 先用 `/ccg:enhance` 把需求整理清楚，再進入規劃或實作
+
+### UI / UX 類指令也很值得用
+
+CCG 不只有核心開發流程，也有 20+ 個偏 UI / UX 精修的指令，例如：
+
+```bash
+/ccg:audit
+/ccg:polish
+/ccg:harden
+/ccg:distill
+```
+
+這些指令很適合在前端專案的最後階段做整體品質整理。
 
 ## 參與貢獻
 
-歡迎貢獻！請閱讀 [CONTRIBUTING.md](./CONTRIBUTING.md) 瞭解開發指南。
+歡迎一起改進 CCG。詳細方式請參考 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
-想找一個入手點？檢視標記為 [`good first issue`](https://github.com/fengshao1227/ccg-workflow/labels/good%20first%20issue) 的 Issue。
+如果你想找容易上手的題目，可以先查看標記為 [`good first issue`](https://github.com/fengshao1227/ccg-workflow/labels/good%20first%20issue) 的議題。
 
 ## 貢獻者
 
@@ -348,80 +566,18 @@ npm uninstall -g ccg-workflow  # npm 全域性使用者需額外執行
 - [GudaStudio/skills](https://github.com/GuDaStudio/skills) — 路由設計
 - [ace-tool](https://linux.do/t/topic/1344562) — MCP 工具
 
-## 實戰洞見與使用建議
-
-> 以下是實際導入 CCG 後的觀察與建議，供正體中文使用者參考。
-
-### 誰最適合用 CCG？
-
-CCG 的威力在**跨前後端的中大型功能開發**。如果你的任務是：
-
-| 場景 | 建議 |
-|------|------|
-| 改一行 CSS、修一個 typo | 直接用 Claude Code，不需要 CCG |
-| 單純後端 API 或單純前端元件 | `/ccg:backend` 或 `/ccg:frontend` 快速模式即可 |
-| 全端功能（如：登入系統、看板 API + UI） | `/ccg:workflow` 或 `/ccg:team-*` 系列最有感 |
-| 需要嚴格品質把關的專案 | `/ccg:spec-*` OPSX 規範驅動 |
-
-**經驗法則**：如果你覺得「這個功能我要同時改 3 個以上檔案」，就值得用 CCG。
-
-### 沒有 Codex / Gemini CLI 也能用
-
-CCG 的安全設計意味著 Claude 是唯一有寫入權限的模型。即使你沒裝 Codex 或 Gemini CLI，大部分命令仍可運作（Claude 會自行處理）。先裝起來體驗斜杠命令的工作流紀律，之後再逐步加入其他模型。
-
-### 與既有工作流共存
-
-如果你已經有自己的 Skills 系統（如 Superpowers）、自訂的 slash commands、或 CLAUDE.md 規範，CCG 可以和平共存：
-
-- CCG 命令都有 `/ccg:` 前綴，不會衝突
-- CCG 安裝的 skills 在 `~/.claude/skills/ccg/` 子目錄
-- 你可以選擇性使用——日常小事用自己的流程，大型功能才出動 CCG
-
-### OPSX 的價值：讓 AI「不能自由發揮」
-
-這是 CCG 最被低估的功能。`/ccg:spec-research` 會先把需求轉成**約束集**（constraint set），AI 必須在約束內實作。這解決了一個常見痛點：
-
-> 「AI 寫的 code 能跑，但不是我要的架構」
-
-用 OPSX 的流程是：需求 → 約束 → 計劃 → 實作。每一步都可以人工審核，確保方向正確。
-
-### Windows 環境注意事項
-
-- 安裝時建議用 `--skip-prompt` 非互動模式（互動選單在某些終端不穩定）
-- `codeagent-wrapper` 需要 `jq`，Windows 上用 `choco install jq` 或 `scoop install jq`
-- MCP 設定有時需要手動修正，可用 `npx ccg-workflow fix-mcp` 排查
-
-### 省 Token 的技巧
-
-- `/ccg:codex-exec` 讓 Codex 全權執行計劃，Claude 只做最後審核——**大幅降低 Claude token 消耗**
-- Agent Teams 系列每步之間 `/clear` 隔離上下文，避免 context window 爆掉
-- `/ccg:enhance` 可以把模糊需求轉成結構化描述，減少 AI 來回確認的 token 浪費
-
-### Impeccable UI/UX 命令的隱藏寶藏
-
-除了核心開發命令，CCG 附帶 20+ 個 UI/UX 打磨命令（`/ccg:polish`、`/ccg:audit`、`/ccg:distill` 等），這些命令在做前端專案時非常實用：
-
-```bash
-/ccg:audit          # 跑一次無障礙 + 效能 + 主題稽核，產出評分報告
-/ccg:polish         # 出貨前最終品質掃描（間距、對齊、一致性）
-/ccg:harden         # 強化錯誤處理、i18n、邊界情況
-/ccg:distill        # 砍掉不必要的複雜度，讓設計更乾淨
-```
-
-即使你不用 CCG 的多模型路由，單獨使用這些 UI/UX 命令也很值得。
-
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fengshao1227/ccg-workflow&type=timeline&legend=top-left)](https://www.star-history.com/#fengshao1227/ccg-workflow&type=timeline&legend=top-left)
 
 ## 聯絡方式
 
-- **X (Twitter)**: [@CCG_Workflow](https://x.com/CCG_Workflow) — 更新動態、實戰演示、使用技巧
-- **郵箱**: [fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — 贊助、合作洽談、開發交流
-- **Issues**: [GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — Bug 反饋與功能建議
-- **討論區**: [GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — 問題諮詢與社群交流
+- **X (Twitter)**：[@CCG_Workflow](https://x.com/CCG_Workflow) — 最新消息、示範與使用技巧
+- **Email**：[fengshao1227@gmail.com](mailto:fengshao1227@gmail.com) — 贊助、合作或開發交流
+- **Issues**：[GitHub Issues](https://github.com/fengshao1227/ccg-workflow/issues) — 回報 Bug 與提出功能建議
+- **Discussions**：[GitHub Discussions](https://github.com/fengshao1227/ccg-workflow/discussions) — 問題討論與社群交流
 
-## License
+## 授權
 
 MIT
 
