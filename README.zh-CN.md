@@ -10,7 +10,7 @@
 [![Tests](https://img.shields.io/badge/Tests-139%20passed-brightgreen.svg)]()
 [![Follow on X](https://img.shields.io/badge/X-@CCG__Workflow-black?logo=x&logoColor=white)](https://x.com/CCG_Workflow)
 
-[繁體中文](./README.md) | 简体中文 | [English](./README.en.md)
+[繁體中文（臺灣）](./README.md) | **简体中文（中国大陆）** | [English](./README.en.md)
 
 </div>
 
